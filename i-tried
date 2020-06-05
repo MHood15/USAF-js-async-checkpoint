@@ -1,0 +1,64 @@
+/* Create a command line application that processes a file list of pokemon names (each name seperated by a new line) and logs each Pokemon's types (for some there are many) according to the pokeapi.co API.
+
+This is an assessment of both your understanding of the course material so far and your ability to independently problem solve and use the internet/other resources to implement anything you don't understand. */
+
+ /* 
+ Input - receiving input from the Pokemon API via fetch calls
+         also taking in list of Pokemons from a .txt file as the function input
+
+ Output - console.log text strings of each Pokemon and its type
+
+ Constraints - none (?)
+
+ Edge Cases - none right now to be considered
+
+ Explanation - I will get a list of all the Pokemons and put them into an array, then using a FETCH command from the Poke API I will fetch each Pokemon type presumably using a loop and then output as a series of strings to the console (sounds easy)
+
+ https://pokeapi.co/api/v2/pokemon/pikachu/
+
+ Steps: 
+   1. Obtain the list of Pokemons and put them into an array
+   2. Fetch each Pokemon's exhaustive list of traits (or whatever) from the API
+     this link: https://pokeapi.co/api/v2/pokemon/pikachu/
+   3. Parse out the Pokemon type from the API output
+     Saved as an object
+     May have multiple types
+   4. Save the type to the associated Pokemon and print it out
+   5. If time, do all the other stuff to make it work like running fetch on repl.it
+ */
+
+const fetch = require('node-fetch');
+
+function getPokemonTypes(pokemonList){
+
+//Step 1
+  var fs = require("fs");
+  let pokeList = fs.readFileSync(pokemonList).toString().toLowerCase().split('\n');
+
+//Step 2
+  let url = 'https://pokeapi.co/api/v2/pokemon/' //reusable URL - can tack on Poke name
+
+  for(var i = 0; i < pokeList.length; i++){
+    fetch(url + pokeList[i])
+      .then(response => response.json())
+      .then(function(type) {
+//Step 3
+        var allTypes = ''
+
+        for(var i = 0; i < type.length; i++){
+          //An array called "types" with nested objects "type" : "name" : ans
+          var aType = type['type']['name'];
+          allTypes += ' ' + type;
+        }
+
+        return allTypes
+
+//Step 4
+        console.log(pokeList[i] + ':' + allTypes + '\n');
+      })
+    
+  }
+
+}
+
+getPokemonTypes('pokemon.txt')
