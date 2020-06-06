@@ -41,20 +41,24 @@ function getPokemonTypes(pokemonList){
   for(var i = 0; i < pokeList.length; i++){
     fetch(url + pokeList[i])
       .then(response => response.json())
-      .then(function(type) {
+
 //Step 3
-        var allTypes = ''
-
-        for(var i = 0; i < type.length; i++){
-          //An array called "types" with nested objects "type" : "name" : ans
-          var aType = type['type']['name'];
-          allTypes += ' ' + type;
-        }
-
-        return allTypes
+      .then(function(response) {
+       var typesArr = response['types']
+       var pokeName = response['forms'][0]['name'];
+       pokeName = pokeName.charAt(0).toUpperCase() + pokeName.slice(1)
+       var pokeType = '' ;
+       
+       for(var j = 0; j < typesArr.length; j++){
+         if(j === typesArr.length-1){
+           pokeType += typesArr[j]['type']['name'] + ' '
+         }else{
+           pokeType += typesArr[j]['type']['name'] + ', '
+         }
+       }
 
 //Step 4
-        console.log(pokeList[i] + ':' + allTypes + '\n');
+       console.log(pokeName + ': ' + pokeType + '\n')
       })
     
   }
